@@ -1,0 +1,47 @@
+version: '2'
+
+services:
+  mongo:
+    restart: always
+    image: mongo:3.4
+    expose:
+      - "27017"
+    ports:
+      - "27009:27017"
+    volumes:
+      - mongo:/data/db
+    mem_limit: 96m
+
+  app:
+    # image: akkapong/php-nginx-phalcon-mongo:latest
+    build: docker/app/
+    tty: true
+    restart: always
+    ports:
+      - "8009:80"
+    volumes:
+      - .:/var/www/html
+      - ./docker/nginx-sites:/etc/nginx/sites-available
+      - ./docker/nginx-sites:/etc/nginx/sites-enabled
+    mem_limit: 128m
+    depends_on:
+      - mongo
+    links:
+      - mongo
+    container_name: authen-ms-api
+  # app-swagger-ui:
+  #   image: swaggerapi/swagger-ui
+  #   restart: always
+  #   ports:
+  #     - "809:8080"
+  #   volumes:
+  #     - .:/app
+  #   mem_limit: 96m
+  #   environment:
+  #       - SWAGGER_JSON=/app/swagger.json
+
+volumes:
+  mongo:
+    driver: local
+  mysql:
+    driver: local

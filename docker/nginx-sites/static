@@ -1,0 +1,13 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    root /data/clientkey;
+    index static-authen-ms-api.local;
+
+    server_name test.com www.test.com;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
